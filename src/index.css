@@ -1,3 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Alkatra:wght@600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.boxShaddow {
+  box-shadow: 7px 8px 5px 0px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 7px 8px 5px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 7px 8px 5px 0px rgba(0, 0, 0, 0.75);
+}
+
+.toDoListHeader {
+  font-family: 'Alkatra', cursive;
+}
+
+.toDoListInputShaddow {
+  box-shadow: 3px 3px 13px -1px rgb(94, 94, 94);
+  -webkit-box-shadow: 3px 3px 13px -1px rgb(147, 147, 147);
+  -moz-box-shadow: 3px 3px 13px -1px rgb(169, 169, 169);
+}
+.toDoPaperShaddow {
+  box-shadow: 3px 3px 0px -1px rgba(239, 236, 236, 1);
+  -webkit-box-shadow: 3px 3px 0px -1px rgba(239, 236, 236, 1);
+  -moz-box-shadow: 3px 3px 0px -1px rgba(239, 236, 236, 1);
+}

@@ -22,6 +22,7 @@ type Cell = {
   OpenEdit: (index: number) => void
   toDoEdit: boolean[]
   setEditedText: React.Dispatch<React.SetStateAction<string>>
+  toDoError: string
 }
 
 const Context = createContext<Cell | null>(null)
@@ -40,6 +41,7 @@ export const ContextProvider = ({
   const [toDoList, setToDoList] = useState<toDoListType[]>(
     toDoListDataLocalStorage !== null && JSON.parse(toDoListDataLocalStorage),
   )
+  const [toDoError, setToDoError] = useState<string>('')
   // number array for random array
   const numberForRandom: number[] = Array.from(
     { length: 10 },
@@ -56,9 +58,16 @@ export const ContextProvider = ({
       let Randomizer = Math.floor(Math.random() * numberForRandom.length)
       randomID += numberForRandom[Randomizer]
     }
+    if (toDoInput !== '') {
+      setToDoList([...toDoList, { text: toDoInput, id: randomID }])
+      setToDoInput('')
+    } else {
+      setToDoError('Please Enter The Text')
 
-    setToDoList([...toDoList, { text: toDoInput, id: randomID }])
-    setToDoInput('')
+      setTimeout(() => {
+        setToDoError('')
+      }, 3000)
+    }
   }
   // remove item from list
   const RemoveFromList = (id: string) => {
@@ -100,6 +109,7 @@ export const ContextProvider = ({
         toDoEdit,
         setEditedText,
         OpenEdit,
+        toDoError,
       }}
     >
       {children}
