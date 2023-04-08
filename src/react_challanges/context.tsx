@@ -23,6 +23,10 @@ type Cell = {
   toDoEdit: boolean[]
   setEditedText: React.Dispatch<React.SetStateAction<string>>
   toDoError: string
+  editedText: string
+
+  toDoCheck: boolean[]
+  CheckToDO: (index: number) => void
 }
 
 const Context = createContext<Cell | null>(null)
@@ -74,6 +78,7 @@ export const ContextProvider = ({
     let filteredList = toDoList.filter((val: toDoListType) => val.id !== id)
     setToDoList(filteredList)
   }
+
   // edit item
   const [toDoEdit, setToDoEdit] = useState<boolean[]>(
     new Array(toDoList.length).fill(false),
@@ -97,6 +102,25 @@ export const ContextProvider = ({
     setToDoList(findEdited)
   }
 
+  // letter check
+  useEffect(() => {
+    if (toDoInput.length > 201) {
+      setToDoError('Characters Must Be Under 200 Letters')
+
+      setTimeout(() => {
+        setToDoError('')
+      }, 3000)
+    }
+  }, [toDoInput, editedText])
+  // check box
+  const [toDoCheck, setToDoCheck] = useState<boolean[]>(
+    new Array(toDoList.length).fill(false),
+  )
+  const CheckToDO = (index: number) => {
+    let newCheck = [...toDoCheck]
+    newCheck[index] = !newCheck[index]
+    setToDoCheck(newCheck)
+  }
   return (
     <Context.Provider
       value={{
@@ -110,6 +134,9 @@ export const ContextProvider = ({
         setEditedText,
         OpenEdit,
         toDoError,
+        editedText,
+        toDoCheck,
+        CheckToDO,
       }}
     >
       {children}
