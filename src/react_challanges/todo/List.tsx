@@ -2,8 +2,13 @@ import React, { FC } from 'react'
 import { useContextMain } from '../context'
 import { BiEditAlt } from 'react-icons/bi'
 import { RiDeleteBin6Line } from 'react-icons/ri'
-import { MdAssignmentAdd, MdFreeCancellation } from 'react-icons/md'
+import {
+  MdAssignmentAdd,
+  MdFreeCancellation,
+  MdCancelPresentation,
+} from 'react-icons/md'
 import { AiOutlineCheck } from 'react-icons/ai'
+
 import { motion as m } from 'framer-motion'
 type ListType = {
   text: string
@@ -27,7 +32,7 @@ const List: FC<ListType> = ({ text, id, index }) => {
 
   const style = {
     mainDiv: `w-[80%] max_smm:w-[75%] border-yellow-500  border-b-2   max-h-[400px]     flex items-start py-5 justify-between px-5  `,
-    span: `outline font-bold text-gray-500 max-h-[400px]   w-[80%] cursor-pointer flex items-center px-2 w-[80%] outline-none  ${
+    span: `outline font-bold text-gray-500 max-h-[400px]  break-all    w-[80%] cursor-pointer flex flex flex-wrap px-2   outline-none  ${
       toDoCheck[index] &&
       'line-through decoration-solid decoration-[10px] toDoListOverLineColor  '
     }`,
@@ -35,7 +40,7 @@ const List: FC<ListType> = ({ text, id, index }) => {
     btnWrapper: `flex items-end  justify-start gap-2 w-[10%]  `,
     trashIcon: `text-yellow-500 hover:text-red-500 text-[1.6rem] `,
     editIcon: `text-yellow-500 hover:text-green-400 text-[1.6rem]`,
-    canelEdit: `text-yellow-500 hover:text-red-600 text-[1.6rem]`,
+    canelEdit: `text-yellow-500 hover:text-red-600 text-[1.4rem]`,
     saveIcon: `text-yellow-500 hover:text-green-400 text-[1.6rem]`,
 
     checkBox: `w-[2rem] h-[2rem] border-2 border-gray-300  hover:border-green-400 cursor-pointer rounded-[4px] flex items-center justify-center ${
@@ -70,7 +75,10 @@ const List: FC<ListType> = ({ text, id, index }) => {
         </span>
       )}
       <div className={style.btnWrapper}>
-        <button className={style.trashIcon} onClick={() => RemoveFromList(id)}>
+        <button
+          className={style.trashIcon}
+          onClick={() => RemoveFromList(id, index)}
+        >
           <RiDeleteBin6Line />
         </button>
 
@@ -82,7 +90,7 @@ const List: FC<ListType> = ({ text, id, index }) => {
           <>
             {' '}
             <button className={style.canelEdit} onClick={() => OpenEdit(index)}>
-              <MdFreeCancellation />
+              <MdCancelPresentation />
             </button>{' '}
             <button
               className={style.saveIcon}

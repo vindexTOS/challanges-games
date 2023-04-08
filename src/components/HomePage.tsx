@@ -4,6 +4,7 @@ const HomePage = () => {
   return (
     <div>
       <Link to="/to-do-list">TODO</Link>
+      <Link to="/tic-tac-toe">tic tac toe</Link>
     </div>
   )
 }

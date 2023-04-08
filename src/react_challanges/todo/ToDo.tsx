@@ -59,7 +59,7 @@ const ToDo = () => {
               {toDoError !== '' && <p>{toDoError}</p>}
             </div>
             <div className="w-[100%] h-[500px] flex flex-col items-center justify-start overflow-y-scroll scroll   ">
-              {toDoList.map((val: toDoListType, index: number) => (
+              {toDoList?.map((val: toDoListType, index: number) => (
                 <List key={val.id} index={index} text={val.text} id={val.id} />
               ))}
             </div>

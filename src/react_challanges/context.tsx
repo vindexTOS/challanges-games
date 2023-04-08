@@ -17,7 +17,7 @@ type Cell = {
   AddNewToList: () => void
   toDoList: toDoListType[]
   toDoInput: string
-  RemoveFromList: (id: string) => void
+  RemoveFromList: (id: string, index: number) => void
   EditListItem: (index: number, id: string) => void
   OpenEdit: (index: number) => void
   toDoEdit: boolean[]
@@ -27,6 +27,8 @@ type Cell = {
 
   toDoCheck: boolean[]
   CheckToDO: (index: number) => void
+  ticTacToeGrid: string[][]
+  BoxClick: (gridIndex: number, rowIndex: number) => void
 }
 
 const Context = createContext<Cell | null>(null)
@@ -43,7 +45,9 @@ export const ContextProvider = ({
   )
   const [toDoInput, setToDoInput] = useState<string>('')
   const [toDoList, setToDoList] = useState<toDoListType[]>(
-    toDoListDataLocalStorage !== null && JSON.parse(toDoListDataLocalStorage),
+    toDoListDataLocalStorage !== null
+      ? JSON.parse(toDoListDataLocalStorage)
+      : [],
   )
   const [toDoError, setToDoError] = useState<string>('')
   // number array for random array
@@ -73,11 +77,6 @@ export const ContextProvider = ({
       }, 3000)
     }
   }
-  // remove item from list
-  const RemoveFromList = (id: string) => {
-    let filteredList = toDoList.filter((val: toDoListType) => val.id !== id)
-    setToDoList(filteredList)
-  }
 
   // edit item
   const [toDoEdit, setToDoEdit] = useState<boolean[]>(
@@ -93,13 +92,15 @@ export const ContextProvider = ({
     let newListEdit = [...toDoEdit]
     newListEdit[index] = !newListEdit[index]
     setToDoEdit(newListEdit)
-    let findEdited = toDoList.map((val: any, i: number) => {
-      if (i === index) {
-        val.text = editedText
-      }
-      return val
-    })
-    setToDoList(findEdited)
+    if (editedText !== '') {
+      let findEdited = toDoList.map((val: any, i: number) => {
+        if (i === index) {
+          val.text = editedText
+        }
+        return val
+      })
+      setToDoList(findEdited)
+    }
   }
 
   // letter check
@@ -121,6 +122,30 @@ export const ContextProvider = ({
     newCheck[index] = !newCheck[index]
     setToDoCheck(newCheck)
   }
+
+  // remove item from list
+  const RemoveFromList = (id: string, index: number) => {
+    let filteredList = toDoList.filter((val: toDoListType) => val.id !== id)
+    setToDoList(filteredList)
+    let newCheck = [...toDoCheck]
+    newCheck[index] = false
+    setToDoCheck(newCheck)
+  }
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //tic tac toe
+
+  const [ticTacToeGrid, setTicTacToeGrid] = useState<string[][]>([
+    ['', '', ''],
+    ['', '', ''],
+    ['', '', ''],
+  ])
+
+  const BoxClick = (gridIndex: number, rowIndex: number) => {
+    let newVal = [...ticTacToeGrid]
+    newVal[gridIndex][rowIndex] = 'X'
+    setTicTacToeGrid(newVal)
+    console.log(newVal)
+  }
   return (
     <Context.Provider
       value={{
@@ -137,6 +162,8 @@ export const ContextProvider = ({
         editedText,
         toDoCheck,
         CheckToDO,
+        ticTacToeGrid,
+        BoxClick,
       }}
     >
       {children}
