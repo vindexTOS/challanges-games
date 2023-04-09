@@ -29,6 +29,7 @@ type Cell = {
   CheckToDO: (index: number) => void
   ticTacToeGrid: string[][]
   BoxClick: (gridIndex: number, rowIndex: number) => void
+  setPlayerTool: React.Dispatch<React.SetStateAction<string>>
 }
 
 const Context = createContext<Cell | null>(null)
@@ -139,13 +140,84 @@ export const ContextProvider = ({
     ['', '', ''],
     ['', '', ''],
   ])
+  const [playerTool, setPlayerTool] = useState<string>('')
+  const [playerAi, setAiTool] = useState<string>('')
+  const [activate, setActivate] = useState<boolean>(false)
+  useEffect(() => {
+    if (playerTool === 'O') {
+      setAiTool('X')
+    } else {
+      setAiTool('O')
+    }
+  }, [playerTool])
 
   const BoxClick = (gridIndex: number, rowIndex: number) => {
+    setActivate(!activate)
     let newVal = [...ticTacToeGrid]
-    newVal[gridIndex][rowIndex] = 'X'
-    setTicTacToeGrid(newVal)
+    console.log(newVal[gridIndex])
     console.log(newVal)
+    if (newVal[gridIndex][rowIndex] === '') {
+      newVal[gridIndex][rowIndex] = playerTool
+
+      setTicTacToeGrid(newVal)
+    }
+
+    let string = newVal[gridIndex]
+    if (playerTool !== '') {
+      if (
+        (string[0] === playerTool &&
+          string[1] === playerTool &&
+          string[2] === playerTool) ||
+        ticTacToeGrid[0][0] === playerTool ||
+        (playerAi && ticTacToeGrid[1][1] === playerTool) ||
+        (playerAi && ticTacToeGrid[2][2] === playerTool) ||
+        playerAi ||
+        ticTacToeGrid[2][0] === playerTool ||
+        (playerAi && ticTacToeGrid[1][1] === playerTool) ||
+        (playerAi && ticTacToeGrid[0][2] === playerTool) ||
+        playerAi ||
+        ticTacToeGrid[0][0] === playerTool ||
+        (playerAi && ticTacToeGrid[1][0] === playerTool) ||
+        (playerAi && ticTacToeGrid[2][0] === playerTool) ||
+        playerAi ||
+        ticTacToeGrid[0][1] === playerTool ||
+        (playerAi && ticTacToeGrid[1][1] === playerTool) ||
+        (playerAi && ticTacToeGrid[2][1] === playerTool) ||
+        playerAi ||
+        ticTacToeGrid[0][2] === playerTool ||
+        (playerAi && ticTacToeGrid[1][2] === playerTool) ||
+        (playerAi && ticTacToeGrid[2][2] === playerTool) ||
+        playerAi
+      ) {
+        // console.log(true)
+      }
+    }
   }
+
+  useEffect(() => {
+    let newVal = [...ticTacToeGrid]
+    let AIGridindex = 0
+    let AIRowindex = 0
+
+    let check = true
+
+    if (playerAi !== '') {
+      while (check) {
+        AIGridindex = Math.floor(Math.random() * newVal.length)
+        AIRowindex = Math.floor(Math.random() * newVal[AIGridindex].length)
+        if (newVal[AIGridindex][AIRowindex] === '') {
+          console.log(newVal[AIGridindex][AIRowindex])
+          newVal[AIGridindex][AIRowindex] = playerAi
+          check = false
+
+          break
+        } else {
+          break
+        }
+      }
+    }
+    setTicTacToeGrid(newVal)
+  }, [activate])
   return (
     <Context.Provider
       value={{
@@ -164,6 +236,7 @@ export const ContextProvider = ({
         CheckToDO,
         ticTacToeGrid,
         BoxClick,
+        setPlayerTool,
       }}
     >
       {children}
