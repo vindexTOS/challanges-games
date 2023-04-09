@@ -5,12 +5,18 @@ type GridProps = {
   gridIndex: number
 }
 const Grid: FC<GridProps> = ({ val, gridIndex }) => {
-  const { BoxClick, ticTacToeGrid, playerTool } = useContextMain()
+  const {
+    BoxClick,
+    ticTacToeGrid,
+    playerTool,
+    winner,
+    counter,
+  } = useContextMain()
   const [stopBtn, setStopBtn] = useState<boolean>(true)
   useEffect(() => {
     setTimeout(() => {
       setStopBtn(false)
-    }, 100)
+    }, 300)
     setStopBtn(true)
   }, [ticTacToeGrid])
   return (
@@ -21,13 +27,15 @@ const Grid: FC<GridProps> = ({ val, gridIndex }) => {
             disabled={
               ticTacToeGrid[gridIndex][rowIndex] !== '' ||
               playerTool === '' ||
-              stopBtn
+              stopBtn ||
+              winner !== '' ||
+              counter < 0
             }
             key={rowIndex}
             onClick={() => BoxClick(gridIndex, rowIndex)}
             className={` w-[150px] h-[150px] border-red-600 text-red-600 border-2 cursor-pointer flex items-center justify-center text-[6rem]   ${
               ticTacToeGrid[gridIndex][rowIndex] === 'O'
-                ? 'text-blue-600'
+                ? 'text-blue-400'
                 : 'text-red-600'
             } `}
           >

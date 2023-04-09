@@ -34,6 +34,7 @@ type Cell = {
   counter: number
   setCounter: React.Dispatch<React.SetStateAction<number>>
   ResetTicTac: () => void
+  winner: string
 }
 
 const Context = createContext<Cell | null>(null)
@@ -182,11 +183,13 @@ export const ContextProvider = ({
       for (let i = 0; i < winConditions.length; i++) {
         const [a, b, c] = winConditions[i]
         if (a === playerTool && b === playerTool && c === playerTool) {
-          setWinner('Humanity Won')
-          console.log(winner)
+          if (winner === '') {
+            setWinner('Humanity Won')
+          }
         } else if (a === playerAi && b === playerAi && c === playerAi) {
-          setWinner('Skyenet Won')
-          console.log(winner)
+          if (winner === '') {
+            setWinner('Skyenet Won')
+          }
         }
       }
     }
@@ -230,6 +233,7 @@ export const ContextProvider = ({
   return (
     <Context.Provider
       value={{
+        // to do list start
         toDoList,
         AddNewToList,
         setToDoInput,
@@ -243,6 +247,7 @@ export const ContextProvider = ({
         editedText,
         toDoCheck,
         CheckToDO,
+        // tic tac to start
         ticTacToeGrid,
         BoxClick,
         setPlayerTool,
@@ -250,6 +255,7 @@ export const ContextProvider = ({
         counter,
         setCounter,
         ResetTicTac,
+        winner,
       }}
     >
       {children}

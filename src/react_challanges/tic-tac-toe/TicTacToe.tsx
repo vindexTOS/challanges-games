@@ -1,6 +1,7 @@
 import React from 'react'
 import { useContextMain } from '../context'
 import Grid from './Grid'
+import PopUpWinner from './PopUpWinner'
 const TicTacToe = () => {
   const {
     ticTacToeGrid,
@@ -9,10 +10,11 @@ const TicTacToe = () => {
     ResetTicTac,
     playerTool,
     setPlayerTool,
+    winner,
   } = useContextMain()
 
   const style = {
-    section: `w-[100vw] h-[100vh] ticTacBackground items-center justify-center flex flex-col gap-6`,
+    section: `w-[100vw] h-[100vh] ticTacBackground items-center justify-center flex flex-col gap-6 ticTacTo `,
     btnWrapper: `text-[5rem] gap-6 flex`,
     startResetDiv: `flex gap-5 items-center  justify-center `,
     start: `    w-[14rem]  bg-black  text-[1.6rem] px-7 py-4  rounded-[15px] hover:bg-gray-900  ${
@@ -28,10 +30,9 @@ const TicTacToe = () => {
 
   return (
     <section className={style.section}>
+      {winner !== '' && <PopUpWinner />}
       <div className={style.headerDiV}>
-        <h1 className={style.header}>
-          PICK AS SIGN FOR A FIGHT AGAINTS SKYNET
-        </h1>
+        <h1 className={style.header}>PICK A SIGN FOR A FIGHT AGAINTS SKYNET</h1>
         <div className={style.btnWrapper}>
           <button
             className={`${style.weapone} text-red-600 ${
@@ -56,7 +57,7 @@ const TicTacToe = () => {
       <div className={style.startResetDiv}>
         <button
           title="Pick side to start"
-          disabled={counter >= 0}
+          disabled={playerTool === ''}
           className={`${style.start}   text-red-600 `}
           onClick={() => setCounter(counter + 1)}
         >
