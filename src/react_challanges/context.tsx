@@ -370,7 +370,7 @@ export const ContextProvider = ({
   }, [pokemonState.selectorIndex])
   useEffect(() => {
     // console.log(pokemonData)
-    // console.log(singleUrl)
+    console.log(singleUrl)
     // console.log(pokemonDescription)
   }, [pokemonData])
 

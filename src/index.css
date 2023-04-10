@@ -8,6 +8,10 @@
   src: local('AirbnbCerealLight'),
     url('./fonts/TERMINAT.TTF') format('truetype');
 }
+
+* {
+  user-select: none;
+}
 .ticTacTo {
   font-family: 'Terminator';
 }
