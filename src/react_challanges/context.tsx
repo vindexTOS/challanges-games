@@ -4,12 +4,71 @@ import React, {
   useState,
   useReducer,
   useEffect,
+  Reducer,
 } from 'react'
 export interface toDoListType {
   text: string
   id: string
 }
 {
+}
+type Action = {
+  type: string
+  payload?: number
+}
+type State = {
+  selectorIndex: number
+}
+export type PokemonDataArrayType = {
+  name: string
+  url: string
+}
+
+export type PokemonDataType = {
+  count: number
+  next: string
+  previous: null
+  results: PokemonDataArrayType[]
+}
+
+export type PokemonSingleType = {
+  abilities: []
+  base_experience: number
+  forms: []
+  game_indices: []
+  height: number
+  held_items: []
+  id: number
+  is_default: boolean
+  location_area_encounters: string
+  movies: [
+    {
+      movie: { name: string; url: string }
+      version_group_details: [
+        {
+          level_learned_at: number
+          move_learn_method: { name: string; url: string }
+        },
+      ]
+    },
+  ]
+  name: string
+  order: number
+  past_types: []
+  species: { name: string; url: string }
+  sprites: {
+    back_default: string
+    back_female: null
+    back_shiny: string
+    back_shiny_female: null
+    front_default: string
+    front_female: null
+    front_shiny: string
+    front_shiny_female: null
+  }
+  state: []
+  type: []
+  weight: number
 }
 
 type Cell = {
@@ -35,6 +94,12 @@ type Cell = {
   setCounter: React.Dispatch<React.SetStateAction<number>>
   ResetTicTac: () => void
   winner: string
+  pokemonData: PokemonDataType | {}
+  singleUrl: any | unknown
+
+  pokemonState: State
+  dispatchPokemon: React.Dispatch<Action>
+  pokemonDescription: string
 }
 
 const Context = createContext<Cell | null>(null)
@@ -229,6 +294,85 @@ export const ContextProvider = ({
     setCounter(-1)
     setWinner('')
   }
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //pokemon
+  const reducer = (state: State, action: Action) => {
+    switch (action.type) {
+      case 'next':
+        return {
+          ...state,
+          selectorIndex: action.payload
+            ? action.payload
+            : 0 <= 150
+            ? state.selectorIndex + 1
+            : (state.selectorIndex = 0),
+        }
+      case 'prev':
+        return {
+          ...state,
+          selectorIndex:
+            state.selectorIndex > 0
+              ? state.selectorIndex - 1
+              : (state.selectorIndex = 0),
+        }
+      case 'selector':
+        return {
+          ...state,
+          selectorIndex: action.payload
+            ? (state.selectorIndex = action.payload)
+            : (state.selectorIndex = 0),
+        }
+      default:
+        return state
+    }
+  }
+
+  const [pokemonState, dispatchPokemon] = useReducer<Reducer<State, Action>>(
+    reducer,
+    {
+      selectorIndex: 0,
+    },
+  )
+
+  const pokemonurl = `https://pokeapi.co/api/v2/pokemon/?offset=0&limit=150`
+  const singlePkUrl = `https://pokeapi.co/api/v2/pokemon/${
+    pokemonState.selectorIndex + 1
+  }/`
+  const pokemonDescriptionUrl = `https://pokeapi.co/api/v2/pokemon-species/${
+    pokemonState.selectorIndex + 1
+  }`
+  const [pokemonData, setPokemonData] = useState<PokemonDataType | {}>({})
+  const [singleUrl, setSingleUrl] = useState<PokemonSingleType | {}>({})
+  const [pokemonDescription, setPokemonDescription] = useState<string>('')
+  useEffect(() => {
+    const fetchPokemon = async () => {
+      const description = await fetch(pokemonDescriptionUrl)
+      const decDataJson = await description.json()
+      setPokemonDescription(
+        decDataJson.flavor_text_entries[
+          pokemonState.selectorIndex + 1
+        ].flavor_text.replace(/[\n\f]/g, ' '),
+      )
+
+      const res = await fetch(pokemonurl)
+      const jsonD = await res.json()
+      setPokemonData(jsonD)
+    }
+    const fetchPoke = async () => {
+      const res = await fetch(singlePkUrl)
+      const jsonD = await res.json()
+      setSingleUrl(jsonD)
+    }
+
+    fetchPokemon()
+    fetchPoke()
+    // console.log(pokemonState.index)
+  }, [pokemonState.selectorIndex])
+  useEffect(() => {
+    // console.log(pokemonData)
+    // console.log(singleUrl)
+    // console.log(pokemonDescription)
+  }, [pokemonData])
 
   return (
     <Context.Provider
@@ -256,6 +400,12 @@ export const ContextProvider = ({
         setCounter,
         ResetTicTac,
         winner,
+        /// pokemon
+        pokemonData,
+        singleUrl,
+        pokemonState,
+        dispatchPokemon,
+        pokemonDescription,
       }}
     >
       {children}

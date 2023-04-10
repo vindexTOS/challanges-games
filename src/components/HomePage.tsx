@@ -5,6 +5,7 @@ const HomePage = () => {
     <div>
       <Link to="/to-do-list">TODO</Link>
       <Link to="/tic-tac-toe">tic tac toe</Link>
+      <Link to="/pokemon">pokemon</Link>
     </div>
   )
 }

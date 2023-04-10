@@ -38,6 +38,11 @@ const Grid: FC<GridProps> = ({ val, gridIndex }) => {
                 ? 'text-blue-400'
                 : 'text-red-600'
             } `}
+            style={{
+              color: ` ${
+                ticTacToeGrid[gridIndex][rowIndex] === 'O' ? 'blue' : 'red'
+              } `,
+            }}
           >
             {item}
           </button>
