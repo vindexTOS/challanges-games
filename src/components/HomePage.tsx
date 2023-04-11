@@ -6,6 +6,7 @@ const HomePage = () => {
       <Link to="/to-do-list">TODO</Link>
       <Link to="/tic-tac-toe">tic tac toe</Link>
       <Link to="/pokemon">pokemon</Link>
+      <Link to="/lottory">LOTO</Link>
     </div>
   )
 }

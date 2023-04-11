@@ -21,9 +21,9 @@ const Pokemon = () => {
     header: ` text-[2rem] font-bold text-gray-700`,
     btnWrapper: ` w-[100%] flex  items-center justify-between  `,
     btn: `w-[49%] py-[8px] bg-[#7D70BA] text-[#fff] rounded-[5px]`,
-    picNameWrapper: `flex flex-col items-center justify-center gap-2`,
+    picNameWrapper: `flex flex-col items-center justify-center gap-2 relative`,
     selectorDiv: `w-[300px] h-[40px] bg-white rounded-[7px] flex  items-center justify-between px-2 px-4 font-bold text-gray-500 cursor-pointer`,
-    mapSelectorDiv: `absolute flex flex-col bg-white text-[1.2rem] w-[300px] h-[300px] overflow-y-scroll top-40 scroll`,
+    mapSelectorDiv: `absolute flex flex-col bg-white text-[1.2rem] w-[300px] h-[300px] overflow-y-scroll top-10 scroll`,
     paragaraph: `text-[12px] p-10 text-center font-bold text-gray-600`,
   }
   const { species, sprites } = (singleUrl as PokemonSingleType) || {}
@@ -43,6 +43,7 @@ const Pokemon = () => {
             <div className={style.mapSelectorDiv}>
               {results?.map((val: any, index: number) => (
                 <button
+                  className="hover:bg-gray-300 hover:text-white"
                   onClick={() => {
                     dispatchPokemon({
                       type: 'selector',

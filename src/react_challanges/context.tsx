@@ -100,6 +100,8 @@ type Cell = {
   pokemonState: State
   dispatchPokemon: React.Dispatch<Action>
   pokemonDescription: string
+  setDrawPerSec: React.Dispatch<React.SetStateAction<number>>
+  drawPerSec: number
 }
 
 const Context = createContext<Cell | null>(null)
@@ -373,7 +375,15 @@ export const ContextProvider = ({
     console.log(singleUrl)
     // console.log(pokemonDescription)
   }, [pokemonData])
+  // lottory//////////////////////////////////////////////////////////////////////////////////////////////
 
+  const [lottoNumbers, setLottoNumbers] = useState<number[]>(
+    Array.from({ length: 70 }, (_, i) => i + 1),
+  )
+  const [megaBall, setMegaBall] = useState<number[]>(
+    Array.from({ length: 25 }, (_, i) => i + 1),
+  )
+  const [drawPerSec, setDrawPerSec] = useState<number>(1)
   return (
     <Context.Provider
       value={{
@@ -406,6 +416,9 @@ export const ContextProvider = ({
         pokemonState,
         dispatchPokemon,
         pokemonDescription,
+        //lottory
+        drawPerSec,
+        setDrawPerSec,
       }}
     >
       {children}
