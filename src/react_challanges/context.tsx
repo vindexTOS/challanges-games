@@ -507,20 +507,18 @@ export const ContextProvider = ({
     setAddMoneyToAccount(addMoneyToAccount - 2)
     setLostMoneyCounter(lostMoneyCounter + 2)
     if (arrForValCheck.length === 1) {
-      setAddMoneyToAccount(addMoneyToAccount + 4)
       setWonMoneyCounter(wonMoneyCounter + 4)
     } else if (arrForValCheck.length === 2 || arrForValCheck.length === 3) {
-      setAddMoneyToAccount(addMoneyToAccount + 7)
       setWonMoneyCounter(wonMoneyCounter + 7)
     } else if (arrForValCheck.length === 4) {
-      setAddMoneyToAccount(addMoneyToAccount + 50000)
       setWonMoneyCounter(wonMoneyCounter + 50000)
     } else if (arrForValCheck.length === 5) {
-      setAddMoneyToAccount(addMoneyToAccount + 400000)
       setWonMoneyCounter(wonMoneyCounter + 400000)
     } else if (arrForValCheck.length === 6) {
-      setAddMoneyToAccount(addMoneyToAccount + 1000000)
       setWonMoneyCounter(wonMoneyCounter + 1000000)
+      // } else if (arrForValCheck.length === 0) {
+      //   setAddMoneyToAccount(addMoneyToAccount - 2)
+      //   setLostMoneyCounter(lostMoneyCounter + 2)
     }
     console.log(arrForValCheck)
   }, [lottoWinningNumbers])
