@@ -4,7 +4,7 @@ type WinningNumberProps = {
   data: number[]
 }
 const WinningNumbers: FC<WinningNumberProps> = ({ data }) => {
-  const { RemoveNumberFromBall } = useContextMain()
+  const { RemoveNumberFromBall, lottoRandomNumbers } = useContextMain()
   const style = {
     mainDiv: `w-[100%] flex items-center justify-center`,
     subDiv: `flex gap-1`,
@@ -19,8 +19,8 @@ const WinningNumbers: FC<WinningNumberProps> = ({ data }) => {
             <button
               onClick={() => RemoveNumberFromBall(val, index)}
               className={`${style.ballDiv} ${
-                fakeArr.length - 1 === index && 'bg-purple-100'
-              }`}
+                data.length - 1 === index && 'bg-purple-100'
+              }  ${lottoRandomNumbers.includes(val) && 'bg-green-300'} `}
             >
               {val}
             </button>
@@ -29,9 +29,9 @@ const WinningNumbers: FC<WinningNumberProps> = ({ data }) => {
           <>
             {fakeArr.map((val: string, index: number) => (
               <div
-                className={`${style.ballDiv} ${
+                className={`${style.ballDiv}  ${
                   fakeArr.length - 1 === index && 'bg-purple-100'
-                }`}
+                } `}
               >
                 {val}
               </div>

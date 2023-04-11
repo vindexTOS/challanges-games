@@ -120,6 +120,10 @@ type Cell = {
   addMoneyToAccount: number
   setAddMoneyToAccount: React.Dispatch<React.SetStateAction<number>>
   RandomizeLottoNumbers: () => void
+
+  lostMoneyCounter: number
+
+  wonMoneyCounter: number
 }
 
 const Context = createContext<Cell | null>(null)
@@ -401,7 +405,7 @@ export const ContextProvider = ({
   const [megaBall, setMegaBall] = useState<number[]>(
     Array.from({ length: 25 }, (_, i) => i + 1),
   )
-  const [drawPerSec, setDrawPerSec] = useState<number>(1)
+  const [drawPerSec, setDrawPerSec] = useState<number>(1000)
   const [lottoRandomNumbers, setLottoRandomNumbers] = useState<number[]>([])
   const [lottoWinningNumbers, setLottoWinningNumbers] = useState<number[]>([])
   const [numberBooleanCheck, setNumberBooleanCheck] = useState<boolean[]>(
@@ -412,6 +416,8 @@ export const ContextProvider = ({
   )
 
   const [addMoneyToAccount, setAddMoneyToAccount] = useState<number>(100)
+  const [lostMoneyCounter, setLostMoneyCounter] = useState<number>(0)
+  const [wonMoneyCounter, setWonMoneyCounter] = useState<number>(0)
   const MainNumberCollector = (num: number, index: number) => {
     let newBoolean = [...numberBooleanCheck]
     newBoolean[index] = !newBoolean[index]
@@ -448,21 +454,76 @@ export const ContextProvider = ({
       )
       setLottoRandomNumbers(newFilteredValue)
     }
+    console.log(lottoWinningNumbers)
   }
   const RandomizeLottoNumbers = () => {
-    let RandomLottoryArray = []
+    let RandomLottoryArray: any[] = []
+    let RandomPowerBallNums: any[] = []
     let ticketQuantatiy = addMoneyToAccount / 2
     for (let i = 0; i < ticketQuantatiy; i++) {
+      // main numbers loop
       let lottoArr = []
+      let powerBallArr = []
       for (let x = 0; x < 5; x++) {
         let randomIndex = Math.floor(Math.random() * lottoNumbers.length)
         let randomizedNumber = +lottoNumbers[randomIndex]
         lottoArr.push(randomizedNumber)
       }
       RandomLottoryArray.push(lottoArr)
+
+      // powerball  loop
+
+      for (let j = 0; j < 1; j++) {
+        let randomIndex = Math.floor(Math.random() * megaBall.length)
+        let randomizedNumber = +megaBall[randomIndex]
+        powerBallArr.push(randomizedNumber)
+      }
+      RandomPowerBallNums.push(powerBallArr)
     }
-    console.log(RandomLottoryArray)
+
+    // set time interval for how fast we want to open up tickets
+    let j = 0
+    const intervalLotto = setInterval(() => {
+      if (j >= RandomLottoryArray.length) {
+        clearInterval(intervalLotto)
+        return
+      }
+      setLottoWinningNumbers([
+        ...RandomLottoryArray[j],
+        ...RandomPowerBallNums[j],
+      ])
+
+      j++
+    }, drawPerSec)
   }
+
+  useEffect(() => {
+    let arrForValCheck: number[] = []
+    lottoRandomNumbers.filter((val: number) => {
+      if (lottoWinningNumbers.includes(val)) {
+        arrForValCheck.push(val)
+      }
+    })
+    setAddMoneyToAccount(addMoneyToAccount - 2)
+    setLostMoneyCounter(lostMoneyCounter + 2)
+    if (arrForValCheck.length === 1) {
+      setAddMoneyToAccount(addMoneyToAccount + 4)
+      setWonMoneyCounter(wonMoneyCounter + 4)
+    } else if (arrForValCheck.length === 2 || arrForValCheck.length === 3) {
+      setAddMoneyToAccount(addMoneyToAccount + 7)
+      setWonMoneyCounter(wonMoneyCounter + 7)
+    } else if (arrForValCheck.length === 4) {
+      setAddMoneyToAccount(addMoneyToAccount + 50000)
+      setWonMoneyCounter(wonMoneyCounter + 50000)
+    } else if (arrForValCheck.length === 5) {
+      setAddMoneyToAccount(addMoneyToAccount + 400000)
+      setWonMoneyCounter(wonMoneyCounter + 400000)
+    } else if (arrForValCheck.length === 6) {
+      setAddMoneyToAccount(addMoneyToAccount + 1000000)
+      setWonMoneyCounter(wonMoneyCounter + 1000000)
+    }
+    console.log(arrForValCheck)
+  }, [lottoWinningNumbers])
   useEffect(() => {}, [])
   return (
     <Context.Provider
@@ -513,6 +574,9 @@ export const ContextProvider = ({
         addMoneyToAccount,
         setAddMoneyToAccount,
         RandomizeLottoNumbers,
+        lostMoneyCounter,
+
+        wonMoneyCounter,
       }}
     >
       {children}

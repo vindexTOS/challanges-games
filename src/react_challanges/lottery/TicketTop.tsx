@@ -13,7 +13,12 @@ const TicketTop = () => {
     numberDiv: `  flex  `,
   }
 
-  const numForDraw = [1, 3, 10, 100]
+  const numForDraw = [
+    { title: '1', value: 1000 },
+    { title: '3', value: 300 },
+    { title: '10', value: 100 },
+    { title: '100', value: 10 },
+  ]
   return (
     <section className={style.mainDiv}>
       <div className={style.drawAndPrie}>
@@ -30,14 +35,14 @@ const TicketTop = () => {
             <h1 className={style.header}>Draw Per Second</h1>{' '}
           </div>
           <div className={style.numberDiv}>
-            {numForDraw.map((val: number) => (
+            {numForDraw.map((val: { title: string; value: number }) => (
               <button
                 className={`w-[4rem] outline outline-[1px] outline-gray-300  ${
-                  drawPerSec === val && 'bg-blue-500 text-white'
+                  drawPerSec === val.value && 'bg-blue-500 text-white'
                 }`}
-                onClick={() => setDrawPerSec(Number(val))}
+                onClick={() => setDrawPerSec(Number(val.value))}
               >
-                {val}
+                {val.title}
               </button>
             ))}
           </div>
