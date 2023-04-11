@@ -102,6 +102,23 @@ type Cell = {
   pokemonDescription: string
   setDrawPerSec: React.Dispatch<React.SetStateAction<number>>
   drawPerSec: number
+  setLottoRandomNumbers: React.Dispatch<React.SetStateAction<number[]>>
+  lottoRandomNumbers: number[]
+
+  lottoWinningNumbers: number[]
+  setLottoWinningNumbers: React.Dispatch<React.SetStateAction<number[]>>
+
+  lottoNumbers: number[]
+  megaBall: number[]
+  MainNumberCollector: (num: number, index: number) => void
+  PowerballCollector: (num: number, index: number) => void
+  numberBooleanCheck: boolean[]
+
+  RemoveNumberFromBall: (num: number, index: number) => void
+  powerBallBooleanCheck: boolean[]
+
+  addMoneyToAccount: number
+  setAddMoneyToAccount: React.Dispatch<React.SetStateAction<number>>
 }
 
 const Context = createContext<Cell | null>(null)
@@ -384,6 +401,54 @@ export const ContextProvider = ({
     Array.from({ length: 25 }, (_, i) => i + 1),
   )
   const [drawPerSec, setDrawPerSec] = useState<number>(1)
+  const [lottoRandomNumbers, setLottoRandomNumbers] = useState<number[]>([])
+  const [lottoWinningNumbers, setLottoWinningNumbers] = useState<number[]>([])
+  const [numberBooleanCheck, setNumberBooleanCheck] = useState<boolean[]>(
+    new Array(lottoRandomNumbers.length).fill(false),
+  )
+  const [powerBallBooleanCheck, setPowerBallBooleanCheck] = useState<boolean[]>(
+    new Array(megaBall.length).fill(false),
+  )
+
+  const [addMoneyToAccount, setAddMoneyToAccount] = useState<number>(0)
+  const MainNumberCollector = (num: number, index: number) => {
+    let newBoolean = [...numberBooleanCheck]
+    newBoolean[index] = !newBoolean[index]
+    setNumberBooleanCheck(newBoolean)
+    if (lottoRandomNumbers.length < 5) {
+      setLottoRandomNumbers([...lottoRandomNumbers, num])
+    }
+    if (lottoRandomNumbers.includes(num)) {
+      const newNumbers = lottoRandomNumbers.filter((val) => val !== num)
+      setLottoRandomNumbers(newNumbers)
+    }
+  }
+
+  const RemoveNumberFromBall = (num: number, index: number) => {
+    let newBoolean = [...numberBooleanCheck]
+    newBoolean[num - 1] = !newBoolean[num - 1]
+    setNumberBooleanCheck(newBoolean)
+    const newNumbers = lottoRandomNumbers.filter(
+      (val, i: number) => index !== i,
+    )
+    setLottoRandomNumbers(newNumbers)
+  }
+
+  const PowerballCollector = (num: number, index: number) => {
+    let newVal = [...powerBallBooleanCheck]
+    newVal[index] = !newVal[index]
+    setPowerBallBooleanCheck(newVal)
+    if (lottoRandomNumbers.length >= 5 && lottoRandomNumbers.length < 6) {
+      setLottoRandomNumbers([...lottoRandomNumbers, num])
+    }
+    if (lottoRandomNumbers.includes(num)) {
+      const newFilteredValue = lottoRandomNumbers.filter(
+        (val: number) => val !== num,
+      )
+      setLottoRandomNumbers(newFilteredValue)
+    }
+  }
+
   return (
     <Context.Provider
       value={{
@@ -419,6 +484,19 @@ export const ContextProvider = ({
         //lottory
         drawPerSec,
         setDrawPerSec,
+        lottoRandomNumbers,
+        setLottoRandomNumbers,
+        lottoWinningNumbers,
+        setLottoWinningNumbers,
+        lottoNumbers,
+        megaBall,
+        MainNumberCollector,
+        PowerballCollector,
+        numberBooleanCheck,
+        RemoveNumberFromBall,
+        powerBallBooleanCheck,
+        addMoneyToAccount,
+        setAddMoneyToAccount,
       }}
     >
       {children}
