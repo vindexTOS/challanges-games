@@ -119,6 +119,7 @@ type Cell = {
 
   addMoneyToAccount: number
   setAddMoneyToAccount: React.Dispatch<React.SetStateAction<number>>
+  RandomizeLottoNumbers: () => void
 }
 
 const Context = createContext<Cell | null>(null)
@@ -410,7 +411,7 @@ export const ContextProvider = ({
     new Array(megaBall.length).fill(false),
   )
 
-  const [addMoneyToAccount, setAddMoneyToAccount] = useState<number>(0)
+  const [addMoneyToAccount, setAddMoneyToAccount] = useState<number>(100)
   const MainNumberCollector = (num: number, index: number) => {
     let newBoolean = [...numberBooleanCheck]
     newBoolean[index] = !newBoolean[index]
@@ -448,7 +449,21 @@ export const ContextProvider = ({
       setLottoRandomNumbers(newFilteredValue)
     }
   }
-
+  const RandomizeLottoNumbers = () => {
+    let RandomLottoryArray = []
+    let ticketQuantatiy = addMoneyToAccount / 2
+    for (let i = 0; i < ticketQuantatiy; i++) {
+      let lottoArr = []
+      for (let x = 0; x < 5; x++) {
+        let randomIndex = Math.floor(Math.random() * lottoNumbers.length)
+        let randomizedNumber = +lottoNumbers[randomIndex]
+        lottoArr.push(randomizedNumber)
+      }
+      RandomLottoryArray.push(lottoArr)
+    }
+    console.log(RandomLottoryArray)
+  }
+  useEffect(() => {}, [])
   return (
     <Context.Provider
       value={{
@@ -497,6 +512,7 @@ export const ContextProvider = ({
         powerBallBooleanCheck,
         addMoneyToAccount,
         setAddMoneyToAccount,
+        RandomizeLottoNumbers,
       }}
     >
       {children}

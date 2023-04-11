@@ -1,6 +1,8 @@
 import React from 'react'
+import { useContextMain } from '../context'
 
 const Start = () => {
+  const { RandomizeLottoNumbers } = useContextMain()
   const style = {
     mainDiv: `w-[100%] flex items-center justify-between px-10`,
     headerWrapper: `flex gap-2 items-center justify-start `,
@@ -14,7 +16,7 @@ const Start = () => {
         <h1 className={style.numHeader}>5</h1>
         <h1 className={style.header}>Lets Kick This Off!</h1>
       </div>
-      <button>START SIMULATOR</button>
+      <button onClick={() => RandomizeLottoNumbers()}>START SIMULATOR</button>
     </div>
   )
 }

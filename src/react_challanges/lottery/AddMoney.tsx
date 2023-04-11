@@ -25,7 +25,12 @@ const AddMoney = () => {
       </div>
       <div className={style.numberDiv}>
         {moneyArray.map((val: any) => (
-          <h1 className={style.moneyHeader}>${val.title}</h1>
+          <h1
+            onClick={() => setAddMoneyToAccount(Number(val.num))}
+            className={style.moneyHeader}
+          >
+            ${val.title}
+          </h1>
         ))}
       </div>
     </div>
