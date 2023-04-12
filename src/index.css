@@ -69,3 +69,9 @@
     rgba(0, 0, 0, 1) 39%
   );
 }
+
+.lottoShaddow {
+  box-shadow: 4px 9px 17px -6px rgba(0, 0, 0, 0.66);
+  -webkit-box-shadow: 4px 9px 17px -6px rgba(0, 0, 0, 0.66);
+  -moz-box-shadow: 4px 9px 17px -6px rgba(0, 0, 0, 0.66);
+}

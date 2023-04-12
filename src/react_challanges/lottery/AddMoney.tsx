@@ -1,6 +1,6 @@
 import React from 'react'
 import { useContextMain } from '../context'
-
+import { motion as m } from 'framer-motion'
 const AddMoney = () => {
   const { addMoneyToAccount, setAddMoneyToAccount } = useContextMain()
   const style = {
@@ -25,12 +25,18 @@ const AddMoney = () => {
       </div>
       <div className={style.numberDiv}>
         {moneyArray.map((val: any) => (
-          <h1
+          <m.button
+            whileHover={{
+              scale: 1.1,
+              boxShadow: `-1px 7px 18px 1px rgba(0,0,0,0.66)`,
+              backgroundColor: 'white',
+              color: 'black',
+            }}
             onClick={() => setAddMoneyToAccount(Number(val.num))}
-            className={style.moneyHeader}
+            className={`${style.moneyHeader}  `}
           >
             ${val.title}
-          </h1>
+          </m.button>
         ))}
       </div>
     </div>
