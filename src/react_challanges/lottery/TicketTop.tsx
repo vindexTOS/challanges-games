@@ -1,8 +1,14 @@
 import React from 'react'
 import { useContextMain } from '../context'
-
+import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/Gi'
+import { MdDeleteForever } from 'react-icons/md'
 const TicketTop = () => {
-  const { drawPerSec, setDrawPerSec } = useContextMain()
+  const {
+    drawPerSec,
+    setDrawPerSec,
+    NumberRandomizerForLotto,
+    ReStartLottoSimulator,
+  } = useContextMain()
   const style = {
     mainDiv: `w-[100%] flex items-center justify-center`,
     drawAndPrie: `w-[90%] text-[1.34rem] py-10 flex  flex-col gap-5`,
@@ -11,6 +17,7 @@ const TicketTop = () => {
     numHeader: `bg-blue-500 text-[1.2rem] font-bold text-white w-[2.5rem] h-[2.5rem] text-center flex items-center justify-center rounded-[50%] `,
     header: `font-medium text-gray-500`,
     numberDiv: `  flex  `,
+    btnWrapper: `flex gap-2 items-center justify-enter `,
   }
 
   const numForDraw = [
@@ -52,7 +59,16 @@ const TicketTop = () => {
             <h1 className={style.numHeader}>3</h1>
             <h1 className={style.header}>Pick a number</h1>
           </div>
-          <div>random, delete </div>
+          <div className={style.btnWrapper}>
+            <GiPerspectiveDiceSixFacesRandom
+              onClick={NumberRandomizerForLotto}
+              className="text-blue-500 text-[2.5rem] hover:text-blue-600 cursor-pointer "
+            />{' '}
+            <MdDeleteForever
+              onClick={ReStartLottoSimulator}
+              className="text-blue-500 text-[2.5rem] hover:text-blue-600 cursor-pointer "
+            />
+          </div>
         </div>
       </div>
     </section>

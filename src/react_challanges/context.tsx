@@ -5,6 +5,7 @@ import React, {
   useReducer,
   useEffect,
   Reducer,
+  useRef,
 } from 'react'
 export interface toDoListType {
   text: string
@@ -124,6 +125,10 @@ type Cell = {
   lostMoneyCounter: number
 
   wonMoneyCounter: number
+  lottoRef: React.MutableRefObject<null>
+  lottoButtonPressed: boolean
+  NumberRandomizerForLotto: () => void
+  ReStartLottoSimulator: () => void
 }
 
 const Context = createContext<Cell | null>(null)
@@ -418,6 +423,8 @@ export const ContextProvider = ({
   const [addMoneyToAccount, setAddMoneyToAccount] = useState<number>(100)
   const [lostMoneyCounter, setLostMoneyCounter] = useState<number>(0)
   const [wonMoneyCounter, setWonMoneyCounter] = useState<number>(0)
+
+  const lottoRef = useRef(null)
   const MainNumberCollector = (num: number, index: number) => {
     let newBoolean = [...numberBooleanCheck]
     newBoolean[index] = !newBoolean[index]
@@ -454,74 +461,122 @@ export const ContextProvider = ({
       )
       setLottoRandomNumbers(newFilteredValue)
     }
-    console.log(lottoWinningNumbers)
   }
+
+  const [lottoButtonPressed, setLottoButtonPressed] = useState<boolean>(false)
+  const [intervalID, setIntervalID] = useState<number | null>(null)
   const RandomizeLottoNumbers = () => {
     let RandomLottoryArray: any[] = []
     let RandomPowerBallNums: any[] = []
     let ticketQuantatiy = addMoneyToAccount / 2
-    for (let i = 0; i < ticketQuantatiy; i++) {
-      // main numbers loop
-      let lottoArr = []
-      let powerBallArr = []
-      for (let x = 0; x < 5; x++) {
-        let randomIndex = Math.floor(Math.random() * lottoNumbers.length)
-        let randomizedNumber = +lottoNumbers[randomIndex]
-        lottoArr.push(randomizedNumber)
-      }
-      RandomLottoryArray.push(lottoArr)
+    if (lottoRandomNumbers.length === 6) {
+      setLottoButtonPressed(true)
+      for (let i = 0; i < ticketQuantatiy; i++) {
+        // main numbers loop
+        let lottoArr = []
+        let powerBallArr = []
+        for (let x = 0; x < 5; x++) {
+          let randomIndex = Math.floor(Math.random() * lottoNumbers.length)
+          let randomizedNumber = +lottoNumbers[randomIndex]
+          lottoArr.push(randomizedNumber)
+        }
+        RandomLottoryArray.push(lottoArr)
 
-      // powerball  loop
+        // powerball  loop
 
-      for (let j = 0; j < 1; j++) {
-        let randomIndex = Math.floor(Math.random() * megaBall.length)
-        let randomizedNumber = +megaBall[randomIndex]
-        powerBallArr.push(randomizedNumber)
+        for (let j = 0; j < 1; j++) {
+          let randomIndex = Math.floor(Math.random() * megaBall.length)
+          let randomizedNumber = +megaBall[randomIndex]
+          powerBallArr.push(randomizedNumber)
+        }
+        RandomPowerBallNums.push(powerBallArr)
       }
-      RandomPowerBallNums.push(powerBallArr)
+
+      // set time interval for how fast we want to open up tickets
+      let j = 0
+      const intervalLotto = setInterval(() => {
+        if (j >= RandomLottoryArray.length) {
+          clearInterval(intervalLotto)
+          return
+        }
+        setLottoWinningNumbers([
+          ...RandomLottoryArray[j],
+          ...RandomPowerBallNums[j],
+        ])
+
+        j++
+      }, drawPerSec)
+      setIntervalID(intervalLotto)
+    } else {
+      // if numbers has not been picked we scroll back up to numbers array
+      const elemnet = (lottoRef.current as unknown) as HTMLTableSectionElement
+      if (elemnet) {
+        elemnet.scrollIntoView({
+          behavior: 'smooth',
+        })
+      }
     }
-
-    // set time interval for how fast we want to open up tickets
-    let j = 0
-    const intervalLotto = setInterval(() => {
-      if (j >= RandomLottoryArray.length) {
-        clearInterval(intervalLotto)
-        return
-      }
-      setLottoWinningNumbers([
-        ...RandomLottoryArray[j],
-        ...RandomPowerBallNums[j],
-      ])
-
-      j++
-    }, drawPerSec)
+  }
+  const StopInterval = () => {
+    if (intervalID) {
+      clearInterval(intervalID)
+      setIntervalID(null)
+    }
   }
 
   useEffect(() => {
     let arrForValCheck: number[] = []
-    lottoRandomNumbers.filter((val: number) => {
-      if (lottoWinningNumbers.includes(val)) {
-        arrForValCheck.push(val)
+    if (lottoButtonPressed) {
+      lottoRandomNumbers.filter((val: number) => {
+        if (lottoWinningNumbers.includes(val)) {
+          arrForValCheck.push(val)
+        }
+      })
+      setAddMoneyToAccount(addMoneyToAccount - 2)
+      setLostMoneyCounter(lostMoneyCounter + 2)
+      if (arrForValCheck.length === 1) {
+        setWonMoneyCounter(wonMoneyCounter + 4)
+      } else if (arrForValCheck.length === 2 || arrForValCheck.length === 3) {
+        setWonMoneyCounter(wonMoneyCounter + 7)
+      } else if (arrForValCheck.length === 4) {
+        setWonMoneyCounter(wonMoneyCounter + 50000)
+      } else if (arrForValCheck.length === 5) {
+        setWonMoneyCounter(wonMoneyCounter + 400000)
+      } else if (arrForValCheck.length === 6) {
+        setWonMoneyCounter(wonMoneyCounter + 1000000)
+        // } else if (arrForValCheck.length === 0) {
+        //   setAddMoneyToAccount(addMoneyToAccount - 2)
+        //   setLostMoneyCounter(lostMoneyCounter + 2)
       }
-    })
-    setAddMoneyToAccount(addMoneyToAccount - 2)
-    setLostMoneyCounter(lostMoneyCounter + 2)
-    if (arrForValCheck.length === 1) {
-      setWonMoneyCounter(wonMoneyCounter + 4)
-    } else if (arrForValCheck.length === 2 || arrForValCheck.length === 3) {
-      setWonMoneyCounter(wonMoneyCounter + 7)
-    } else if (arrForValCheck.length === 4) {
-      setWonMoneyCounter(wonMoneyCounter + 50000)
-    } else if (arrForValCheck.length === 5) {
-      setWonMoneyCounter(wonMoneyCounter + 400000)
-    } else if (arrForValCheck.length === 6) {
-      setWonMoneyCounter(wonMoneyCounter + 1000000)
-      // } else if (arrForValCheck.length === 0) {
-      //   setAddMoneyToAccount(addMoneyToAccount - 2)
-      //   setLostMoneyCounter(lostMoneyCounter + 2)
     }
     console.log(arrForValCheck)
   }, [lottoWinningNumbers])
+
+  // radnomize numbers for player
+
+  const NumberRandomizerForLotto = () => {
+    let lottoArr = []
+    for (let x = 0; x < 6; x++) {
+      let randomIndex = Math.floor(Math.random() * lottoNumbers.length)
+      let randomizedNumber = +lottoNumbers[randomIndex]
+      lottoArr.push(randomizedNumber)
+    }
+    setLottoRandomNumbers(lottoArr)
+    console.log(lottoRandomNumbers)
+  }
+  // restart / delete the simulator
+  const ReStartLottoSimulator = () => {
+    setDrawPerSec(1000)
+    setLottoRandomNumbers([])
+    setLottoWinningNumbers([])
+    setNumberBooleanCheck(new Array(lottoRandomNumbers.length).fill(false))
+    setPowerBallBooleanCheck(new Array(megaBall.length).fill(false))
+    setAddMoneyToAccount(100)
+    setLostMoneyCounter(0)
+    setWonMoneyCounter(0)
+    setLottoButtonPressed(false)
+    StopInterval()
+  }
   useEffect(() => {}, [])
   return (
     <Context.Provider
@@ -575,6 +630,10 @@ export const ContextProvider = ({
         lostMoneyCounter,
 
         wonMoneyCounter,
+        lottoRef,
+        lottoButtonPressed,
+        NumberRandomizerForLotto,
+        ReStartLottoSimulator,
       }}
     >
       {children}

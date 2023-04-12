@@ -10,6 +10,7 @@ const NumberPick = () => {
     numberBooleanCheck,
     lottoRandomNumbers,
     powerBallBooleanCheck,
+    lottoRef,
   } = useContextMain()
 
   const style = {
@@ -19,11 +20,10 @@ const NumberPick = () => {
     header: `text-[1.5rem] font-normal text-gray-500`,
   }
   return (
-    <section className={style.mainSection}>
-      <div className={style.mainNumbersDiv}>
+    <section className={style.mainSection} ref={lottoRef}>
+      <div className={style.mainNumbersDiv} ref={lottoRef}>
         {lottoRandomNumbers.length < 5 && (
           <>
-            {' '}
             {lottoNumbers.map((val: number, i: number) => (
               <button
                 disabled={lottoRandomNumbers.length === 5}
