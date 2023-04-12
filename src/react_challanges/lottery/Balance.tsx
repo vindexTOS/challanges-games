@@ -14,7 +14,7 @@ const Balance = () => {
   } = useContextMain()
   const style = {
     mainDiv: `w-[90%]   flex items-start justify-start flex-col px-10`,
-    subDiv: `flex w-[400px]    gap-10 items-center justify-between px-5 w-[10rem] text-[1.4rem] border-b-[2px] border-gray-300 `,
+    subDiv: `flex w-[400px]  max_sm:text-[1rem] max_sm:w-[300px]   gap-10 items-center justify-between px-5 w-[10rem] text-[1.4rem] border-b-[2px] border-gray-300 `,
   }
   const DivBalanc: FC<DivBalancProps> = ({ title, money }) => {
     return (

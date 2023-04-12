@@ -4,11 +4,11 @@ import { useContextMain } from '../context'
 const AddMoney = () => {
   const { addMoneyToAccount, setAddMoneyToAccount } = useContextMain()
   const style = {
-    mainDiv: `w-[100%] flex flex-col gap-10 px-10`,
+    mainDiv: `w-[100%] flex flex-col gap-10 px-10  `,
     headerWrapper: `flex gap-2 items-center justify-start `,
     header: `text-[1.5rem] font-normal text-gray-500`,
     numHeader: `bg-blue-500 text-[1.2rem] font-bold text-white w-[2.5rem] h-[2.5rem] text-center flex items-center justify-center rounded-[50%] `,
-    numberDiv: `flex items-center  justify-center gap-10 `,
+    numberDiv: `flex items-center  justify-center gap-10 max_sm:gap-2 `,
     moneyHeader: `w-[8rem] h-[2.8rem] text-purple-900 text-[1.2rem] font-medium p-5 border-[2px] rounded-[7px] flex items-center justify-center cursor-pointer`,
   }
   const moneyArray = [
