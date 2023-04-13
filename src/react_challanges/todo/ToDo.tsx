@@ -12,9 +12,9 @@ const ToDo = () => {
     toDoError,
   } = useContextMain()
   const style = {
-    section: `w-[100wh] h-[100vh] bg-yellow-300 flex  items-center justify-center `,
-    todoDivWrapper: `  bg-red-500   rounded-[20px] boxShaddow flex flex-col items-center justify-center w-[30%] max_XL3:w-[50%] max_x:w-[70%] max_md:w-[100%]  h-[740px]`,
-    todoDiv: `w-[95%] flex flex-col items-center justify-start  h-[650px]   toDoPaper toDoPaperShaddow relative`,
+    section: `w-[100wh] h-[100vh]  pt-10  bg-yellow-300 flex  items-center justify-center `,
+    todoDivWrapper: `  bg-red-500   rounded-[20px] boxShaddow flex flex-col items-center justify-center   max_XL3:w-[550px]  max_x:w-[70%] max_md:w-[100%] w-[550px]  h-[640px]`,
+    todoDiv: `w-[95%] flex flex-col items-center justify-start  h-[550px]   toDoPaper toDoPaperShaddow relative`,
     header: `text-[2rem] text-[#ebebd3]   toDoListHeader py-2`,
     input: `w-[80%] h-[4rem]  toDoListInputShaddow mt-3 rounded-[10px] mt-1 flex items-center justify-between px-3  `,
     btnWrapper: `flex  w-[100%] flex-col items-center justify-center  `,

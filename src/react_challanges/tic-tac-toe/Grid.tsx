@@ -33,7 +33,7 @@ const Grid: FC<GridProps> = ({ val, gridIndex }) => {
             }
             key={rowIndex}
             onClick={() => BoxClick(gridIndex, rowIndex)}
-            className={` w-[150px] h-[150px] border-red-600 text-red-600 border-2 cursor-pointer flex items-center justify-center text-[6rem]   ${
+            className={` w-[150px] h-[150px] max_smm1:w-[110px] max_smm1:h-[110px] border-red-600 text-red-600 border-2 cursor-pointer flex items-center justify-center text-[6rem]   ${
               ticTacToeGrid[gridIndex][rowIndex] === 'O'
                 ? 'text-blue-400'
                 : 'text-red-600'

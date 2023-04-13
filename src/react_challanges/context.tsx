@@ -7,6 +7,10 @@ import React, {
   Reducer,
   useRef,
 } from 'react'
+import { useLocation } from 'react-router-dom'
+import { imgData } from '../assets/tictac/mainPage/photoData'
+import { db } from '../firebase/firebase'
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 export interface toDoListType {
   text: string
   id: string
@@ -72,6 +76,21 @@ export type PokemonSingleType = {
   weight: number
 }
 
+export type FolderDataType = {
+  title: string
+  index?: number
+  folder?: FolderDataType[]
+  counter?: number
+  id?: string
+  showFolder?: boolean
+  setShowFolder?: React.Dispatch<React.SetStateAction<boolean>>
+}
+export type ProjectsData = {
+  title: string
+  link: string
+  img?: string
+  id?: string
+}
 type Cell = {
   setToDoInput: React.Dispatch<React.SetStateAction<string>>
   AddNewToList: () => void
@@ -129,6 +148,17 @@ type Cell = {
   lottoButtonPressed: boolean
   NumberRandomizerForLotto: () => void
   ReStartLottoSimulator: () => void
+
+  folderData: FolderDataType[]
+  setFolderData: React.Dispatch<React.SetStateAction<FolderDataType[]>>
+  AddNewFolder: () => void
+  setFolderName: React.Dispatch<React.SetStateAction<string>>
+  Addfolder: (title: string, index: number, id: string) => void
+  addanotherFolder: boolean[]
+  OpenForEdit: (index: number) => void
+  ProjectDataState: ProjectsData[]
+  navBarShow: boolean
+  setNavBarShow: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const Context = createContext<Cell | null>(null)
@@ -138,6 +168,31 @@ export const ContextProvider = ({
 }: {
   children: React.ReactNode
 }) => {
+  // home page object
+  const location = useLocation()
+  const ProjectsData: ProjectsData[] = [
+    { title: 'Lottory', link: '/lottory', img: imgData.lotto },
+    { title: 'To Do List', link: '/to-do-list', img: imgData.todolist },
+    { title: 'Tic Tac Toe', link: '/tic-tac-toe', img: imgData.tictac },
+    { title: 'Pokemon API', link: '/pokemon', img: imgData.pokimon },
+  ]
+  const [ProjectDataState, setProjectDataState] = useState<ProjectsData[]>(
+    ProjectsData,
+  )
+
+  useEffect(() => {
+    const q = query(collection(db, 'challanges'))
+    const unsub = onSnapshot(q, (querrySnapShot) => {
+      let data: any = []
+      querrySnapShot.forEach((doc: any) => {
+        data.push({ ...doc.data(), id: doc.id })
+      })
+      setProjectDataState([...ProjectDataState, ...data])
+    })
+
+    return () => unsub()
+  }, [db])
+
   // TO DO APP LOGIC ////////
   // getting data from local stoarage
   const toDoListDataLocalStorage: string | null = localStorage.getItem(
@@ -464,7 +519,9 @@ export const ContextProvider = ({
   }
 
   const [lottoButtonPressed, setLottoButtonPressed] = useState<boolean>(false)
-  const [intervalID, setIntervalID] = useState<number | null>(null)
+  const [intervalID, setIntervalID] = useState<number | null | NodeJS.Timer>(
+    null,
+  )
   const RandomizeLottoNumbers = () => {
     let RandomLottoryArray: any[] = []
     let RandomPowerBallNums: any[] = []
@@ -577,7 +634,62 @@ export const ContextProvider = ({
     setLottoButtonPressed(false)
     StopInterval()
   }
-  useEffect(() => {}, [])
+
+  /// RECURSION /////////////////////////////////////////////////////////////////////////////
+
+  const [folderData, setFolderData] = useState<
+    FolderDataType[] | unknown | any
+  >([])
+  const [folderName, setFolderName] = useState<string>('')
+  const [addanotherFolder, setAddAnotherFolder] = useState<boolean[]>(
+    new Array(folderData.length).fill(false),
+  )
+
+  const RandomIdMaker = () => {
+    const nums = Array.from({ length: 10 }, (_: any, i: number) => i)
+
+    let randomID = ''
+    for (let i = 0; i < 6; i++) {
+      let randomIndex = Math.floor(Math.random() * nums.length)
+      randomID += nums[randomIndex]
+    }
+    return randomID
+  }
+
+  const AddNewFolder = () => {
+    let newObj = { title: folderName, folder: [], id: RandomIdMaker() }
+    setFolderData([...folderData, newObj])
+  }
+  const Addfolder = (title: string, index: number, id: string) => {
+    let newList = [...folderData]
+    let newBool = [...addanotherFolder]
+    newBool[index] = !newBool[index]
+    setAddAnotherFolder(newBool)
+
+    const parentFolder = newList.find((val: any) => val.id === id)
+
+    if (parentFolder && Array.isArray(parentFolder.folder)) {
+      const newFolder = {
+        title,
+        folder: [],
+        id: RandomIdMaker(),
+      }
+
+      parentFolder.folder.unshift(newFolder)
+
+      setFolderData([...newList])
+    }
+    console.log(folderData)
+  }
+
+  const OpenForEdit = (index: number) => {
+    let newBool = [...addanotherFolder]
+    newBool[index] = !newBool[index]
+    setAddAnotherFolder(newBool)
+  }
+
+  /// nav bar
+  const [navBarShow, setNavBarShow] = useState<boolean>(false)
   return (
     <Context.Provider
       value={{
@@ -634,6 +746,19 @@ export const ContextProvider = ({
         lottoButtonPressed,
         NumberRandomizerForLotto,
         ReStartLottoSimulator,
+        //recursion
+        folderData,
+        setFolderData,
+        AddNewFolder,
+        setFolderName,
+        Addfolder,
+        addanotherFolder,
+        // main page components
+        OpenForEdit,
+        ProjectDataState,
+
+        navBarShow,
+        setNavBarShow,
       }}
     >
       {children}

@@ -44,20 +44,14 @@ const TicketTop = () => {
           </div>
           <div className={style.numberDiv}>
             {numForDraw.map((val: { title: string; value: number }) => (
-              <m.button
-                whileHover={{
-                  scale: 1.1,
-                  boxShadow: `-1px 7px 18px 1px rgba(0,0,0,0.66)`,
-                  backgroundColor: 'white',
-                  color: 'black',
-                }}
-                className={`w-[4rem]   outline outline-[1px] outline-gray-200 rounded-[5px] hover:lottoShaddow  ${
+              <button
+                className={`w-[4rem]   outline outline-[1px] outline-gray-200 rounded-[5px]  ${
                   drawPerSec === val.value && ' bg-blue-500 text-white'
                 }`}
                 onClick={() => setDrawPerSec(Number(val.value))}
               >
                 {val.title}
-              </m.button>
+              </button>
             ))}
           </div>
         </div>

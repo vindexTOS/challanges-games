@@ -43,6 +43,7 @@ const Pokemon = () => {
             <div className={style.mapSelectorDiv}>
               {results?.map((val: any, index: number) => (
                 <button
+                  key={index}
                   className="hover:bg-gray-300 hover:text-white"
                   onClick={() => {
                     dispatchPokemon({
